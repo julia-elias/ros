@@ -2,9 +2,9 @@
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "image_converter");
+  ros::init(argc, argv, "opencv");
   ColorFilter newColors = new ColorFilter();
-  ImageConverter ic;
+  RosInterface  ic(newColors);
   ros::spin();
   return 0;
 }
