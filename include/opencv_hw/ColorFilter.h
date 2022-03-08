@@ -2,7 +2,6 @@
 #define COLOR_FILTER_H
 
 #include <opencv2/opencv.hpp>
-
 #include <string>
 #include <vector>
 
@@ -16,7 +15,6 @@ protected:
     cv::Mat _totalColors;
 public:
     void processImage(cv::Mat img);
-
     void split();
     void findBlue();
     void findGreen();

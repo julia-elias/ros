@@ -1,10 +1,11 @@
 #include <image_transport/image_transport.h>
+#include <opencv_hw/ColorFilter.h>
+#include <opencv_hw/ROSInterface.h>
 
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "image_converter");
-  ColorFilter newColors = new ColorFilter();
-  ImageConverter ic;
+  ROSInterface ic;
   ros::spin();
   return 0;
 }

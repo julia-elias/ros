@@ -104,10 +104,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES opencv_hw
-#  CATKIN_DEPENDS cv_bridge image_transport roscpp sensor_msgs
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  #LIBRARIES opencv_hw
+  #CATKIN_DEPENDS cv_bridge image_transport roscpp sensor_msgs
+  #DEPENDS system_lib
 )
 
 ###########
@@ -117,7 +117,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  $include
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -134,8 +134,8 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(opencv_sub src/opencv_sub.cpp)
-add_executable(opencv_pub src/opencv_pub.cpp)
+add_executable(opencv_hw src/opencv_hw.cpp src/ROSInterface.cpp src/ColorFilter.cpp)
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -151,8 +151,11 @@ add_executable(opencv_pub src/opencv_pub.cpp)
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(opencv_sub ${catkin_LIBRARIES})
-target_link_libraries(opencv_pub ${catkin_LIBRARIES})
+target_link_libraries(
+  opencv_hw
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 
 
 #############

@@ -1,100 +1,46 @@
-#include <ros/ros.h>
-#include <image_transport/image_transport.h>
-#include <cv_bridge/cv_bridge.h>
-#include <sensor_msgs/image_encodings.h>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv_hw/ROSInterface.h>
+#include <string.h>
+#include <iostream>
 
-class ROSInterface {
-  ros::NodeHandle _nh;
-  //image_transport::ImageTransport _it;
-  //image_transport::Publisher _blue;
-  //image_transport::Publisher _red;
-  //image_transport::Publisher _blue;
-  //image_transport::Publisher _green;
-  image_transport::Publisher _pub;
+using namespace cv;
+using namespace std;
 
-
-  image_transport::Subscriber _sub;
-  ColorFilter object;
-
-public:
-  ROSInterface(ColorFilter obj) : _it(_nh)  {
-    _sub = _it.subscribe("/kinect2/hd/image_color", 1, &ImageConverter::imageCb, this);
-    object = obj;
-    //_blue = it.advertise("blue cup", 1);
-    //_green = it.advertise("green cup", 1);
-    //_red = it.advertise("red cup", 1);
-    _pub = it.advertise("all cups", 4);
-    cv::namedWindow("IMAGE");
-
+  ROSInterface::ROSInterface() : _it(_nh) {
+    _sub = _it.subscribe("/kinect2/hd/image_color", 1, &ROSInterface::imageCb, this);
+    _red = _it.advertise("red", 1);
+    _blue = _it.advertise("blue", 1);
+    _green = _it.advertise("green", 1);
+    _bgr = _it.advertise("bgr", 1);
   }
 
-  ~ROSInterface() {
-    cv::destroyWindow("IMAGE");
+  //ROSInterface::~ROSInterface() {}
 
-  }
-
-  void imageCb(const sensor_msgs::ImageConstPtr& msg) {
+  void ROSInterface::imageCb(const sensor_msgs::ImageConstPtr& msg) {
     cv_bridge::CvImagePtr cv_ptr;
     cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+    _cf.processImage(cv_ptr->image);
+      
+    // publishes red image
+    sensor_msgs::ImagePtr _msg =
+        cv_bridge::CvImage(std_msgs::Header(), "bgr8", _cf.getRedImage()).toImageMsg();
+    _red.publish(_msg);
+    
+    
+    // publishes blue image
+    _msg =
+        cv_bridge::CvImage(std_msgs::Header(), "bgr8", _cf.getBlueImage()).toImageMsg();
+    _blue.publish(_msg);
 
-    object.processImage(cv_ptr->image);
-    Mat frame = object.getGreenImage();
-    cap >> frame;
+    // publishes green image
+    _msg =
+        cv_bridge::CvImage(std_msgs::Header(), "bgr8", _cf.getGreenImage()).toImageMsg();
+    _green.publish(_msg);
+    //printf("what is this doing");
 
-    while (!frame.empty()) {
-        sensor_msgs::ImagePtr msg =
-        cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
-        pub.publish(msg);
-        //imshow("color", frame);
-
-        waitKey(10);
-        cap >> frame;
-    }
-
-    frame = object.getBlueImage();
-    cap >> frame;
-
-    while (!frame.empty()) {
-        sensor_msgs::ImagePtr msg =
-        cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
-        pub.publish(msg);
-        //imshow("color", frame);
-
-        waitKey(10);
-        cap >> frame;
-    }
-
-    frame = object.getRedImage();
-    cap >> frame;
-
-    while (!frame.empty()) {
-        sensor_msgs::ImagePtr msg =
-        cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
-        pub.publish(msg);
-        //imshow("color", frame);
-
-        waitKey(10);
-        cap >> frame;
-    }
-
-
-    frame = object.getBGRImage();
-    cap >> frame;
-
-    while (!frame.empty()) {
-        sensor_msgs::ImagePtr msg =
-        cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
-        pub.publish(msg);
-        //imshow("color", frame);
-
-        waitKey(10);
-        cap >> frame;
-    }
-
-
-
+    // publishes bgr image
+   _msg =
+        cv_bridge::CvImage(std_msgs::Header(), "bgr8", _cf.getBGRImage()).toImageMsg();
+    _bgr.publish(_msg);
 
   }
-};
+

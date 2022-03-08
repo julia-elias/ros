@@ -1,11 +1,11 @@
-#include "ColorFilter.h"
+#include "opencv_hw/ColorFilter.h"
 
 using namespace std;
 using namespace cv;
 
+
 void ColorFilter::processImage(cv::Mat img) {
     _frame = img;
-    
     split();
     findBlue();
     findGreen();
@@ -44,7 +44,7 @@ void ColorFilter::showResult() {
    //imshow("colors", _redMask);
 
     // PROBLEM 6: ALL THREE
-    imshow("colors", _totalColors);
+    //imshow("colors", _totalColors);
 
 
 }
