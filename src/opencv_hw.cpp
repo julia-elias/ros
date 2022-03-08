@@ -4,8 +4,10 @@
 
 int main(int argc, char** argv)
 {
+
   ros::init(argc, argv, "image_converter");
   ROSInterface ic;
+
   ros::spin();
   return 0;
 }

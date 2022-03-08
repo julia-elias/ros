@@ -1,3 +1,4 @@
+
 #include <opencv_hw/ROSInterface.h>
 #include <string.h>
 #include <iostream>
@@ -11,9 +12,9 @@ using namespace std;
     _blue = _it.advertise("blue", 1);
     _green = _it.advertise("green", 1);
     _bgr = _it.advertise("bgr", 1);
-  }
 
-  //ROSInterface::~ROSInterface() {}
+
+  ROSInterface::~ROSInterface() {}
 
   void ROSInterface::imageCb(const sensor_msgs::ImageConstPtr& msg) {
     cv_bridge::CvImagePtr cv_ptr;

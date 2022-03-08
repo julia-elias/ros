@@ -27,7 +27,7 @@ protected:
 
 public: 
     ROSInterface();
-    //~ROSInterface();
+    ~ROSInterface();
     void imageCb(const sensor_msgs::ImageConstPtr& msg);
 
 };
